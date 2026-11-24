@@ -1,0 +1,77 @@
+[
+  {
+    "caseId": "varied-synthetic-history",
+    "historyFixture": "sample-training-history.json",
+    "weeklyKm": 25,
+    "availableDays": ["tue", "thu", "sat", "sun"],
+    "experience": "some",
+    "goal": "finish",
+    "weeksUntilRace": 16,
+    "expectedChecks": [
+      "Plan includes no more than 16 weeks of imported history.",
+      "Plan shows explicit assumptions and methodology version.",
+      "Plan includes race event separately from weekly training volume.",
+      "Pace is not presented as a measured or validated target."
+    ]
+  },
+  {
+    "caseId": "sparse-history",
+    "history": [
+      { "weekOffset": 0, "runCount": 1, "totalKm": 5, "longestKm": 5 },
+      { "weekOffset": 1, "runCount": 0, "totalKm": 0, "longestKm": 0 },
+      { "weekOffset": 2, "runCount": 0, "totalKm": 0, "longestKm": 0 }
+    ],
+    "weeklyKm": 10,
+    "availableDays": ["tue", "thu", "sun"],
+    "experience": "new",
+    "goal": "finish",
+    "weeksUntilRace": 12,
+    "expectedChecks": [
+      "Sparse history is surfaced as a limitation.",
+      "No pace target is invented from one activity.",
+      "The plan obeys the selected run days."
+    ]
+  },
+  {
+    "caseId": "inconsistent-history",
+    "history": [
+      { "weekOffset": 0, "runCount": 3, "totalKm": 32, "longestKm": 24 },
+      { "weekOffset": 1, "runCount": 0, "totalKm": 0, "longestKm": 0 },
+      { "weekOffset": 2, "runCount": 2, "totalKm": 11, "longestKm": 7 },
+      { "weekOffset": 3, "runCount": 0, "totalKm": 0, "longestKm": 0 },
+      { "weekOffset": 4, "runCount": 4, "totalKm": 40, "longestKm": 28 }
+    ],
+    "weeklyKm": 20,
+    "availableDays": ["tue", "thu", "sat", "sun"],
+    "experience": "some",
+    "goal": "time",
+    "targetTime": "3:45",
+    "weeksUntilRace": 18,
+    "expectedChecks": [
+      "One high-volume week does not alone determine a fast progression.",
+      "The supplied target is recorded but not represented as guaranteed.",
+      "A recovery phase appears in the schedule."
+    ]
+  },
+  {
+    "caseId": "steady-history",
+    "history": [
+      { "weekOffset": 0, "runCount": 4, "totalKm": 32, "longestKm": 16 },
+      { "weekOffset": 1, "runCount": 4, "totalKm": 30, "longestKm": 15 },
+      { "weekOffset": 2, "runCount": 4, "totalKm": 28, "longestKm": 14 },
+      { "weekOffset": 3, "runCount": 4, "totalKm": 31, "longestKm": 16 },
+      { "weekOffset": 4, "runCount": 4, "totalKm": 29, "longestKm": 15 },
+      { "weekOffset": 5, "runCount": 4, "totalKm": 30, "longestKm": 15 }
+    ],
+    "weeklyKm": 30,
+    "availableDays": ["tue", "thu", "sat", "sun"],
+    "experience": "experienced",
+    "goal": "finish",
+    "weeksUntilRace": 20,
+    "expectedChecks": [
+      "Plan uses a recent-history estimate rather than a single-week maximum.",
+      "Most workouts use easy effort guidance.",
+      "Taper and race week are represented."
+    ]
+  }
+]

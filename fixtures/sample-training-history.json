@@ -1,0 +1,22 @@
+{
+  "fixtureType": "synthetic",
+  "description": "Invented, relative weekly summaries for local plan-generation examples.",
+  "history": [
+    { "weekOffset": 0, "runCount": 3, "totalKm": 24, "longestKm": 12 },
+    { "weekOffset": 1, "runCount": 4, "totalKm": 32, "longestKm": 18 },
+    { "weekOffset": 2, "runCount": 2, "totalKm": 14, "longestKm": 9 },
+    { "weekOffset": 3, "runCount": 0, "totalKm": 0, "longestKm": 0 },
+    { "weekOffset": 4, "runCount": 3, "totalKm": 28, "longestKm": 16 },
+    { "weekOffset": 5, "runCount": 4, "totalKm": 35, "longestKm": 20 },
+    { "weekOffset": 6, "runCount": 3, "totalKm": 27, "longestKm": 15 },
+    { "weekOffset": 7, "runCount": 3, "totalKm": 25, "longestKm": 14 },
+    { "weekOffset": 8, "runCount": 1, "totalKm": 7, "longestKm": 7 },
+    { "weekOffset": 9, "runCount": 2, "totalKm": 13, "longestKm": 8 },
+    { "weekOffset": 10, "runCount": 0, "totalKm": 0, "longestKm": 0 },
+    { "weekOffset": 11, "runCount": 0, "totalKm": 0, "longestKm": 0 },
+    { "weekOffset": 12, "runCount": 2, "totalKm": 12, "longestKm": 8 },
+    { "weekOffset": 13, "runCount": 3, "totalKm": 22, "longestKm": 12 },
+    { "weekOffset": 14, "runCount": 1, "totalKm": 6, "longestKm": 6 },
+    { "weekOffset": 15, "runCount": 3, "totalKm": 24, "longestKm": 13 }
+  ]
+}
