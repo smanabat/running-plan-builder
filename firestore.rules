@@ -1,0 +1,33 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedInAs(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    match /users/{userId} {
+      allow read: if signedInAs(userId);
+      allow create, update: if signedInAs(userId)
+        && request.resource.data.keys().hasOnly(['displayName', 'createdAt', 'updatedAt']);
+      allow delete: if false;
+
+      match /imports/{importId} {
+        allow read, delete: if signedInAs(userId);
+        allow create, update: if signedInAs(userId)
+          && request.resource.data.keys().hasOnly(['fileName', 'uploadedAt', 'runCount', 'weeks', 'storagePath', 'summary'])
+          && request.resource.data.fileName == 'strava-export.csv'
+          && request.resource.data.storagePath == 'users/' + userId + '/imports/' + importId + '/source.csv'
+          && request.resource.data.runCount is int
+          && request.resource.data.runCount >= 0
+          && request.resource.data.runCount <= 10000
+          && request.resource.data.weeks is list
+          && request.resource.data.weeks.size() <= 16;
+      }
+
+      match /plans/{planId} {
+        allow read: if signedInAs(userId);
+        allow write: if false;
+      }
+    }
+  }
+}

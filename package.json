@@ -1,0 +1,13 @@
+{
+  "name": "running-plan-builder",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": ["web", "functions"],
+  "scripts": {
+    "dev": "firebase emulators:exec --project demo-running-plan --only auth,firestore,storage,functions 'npm run dev:web'",
+    "dev:web": "npm run dev --workspace web -- --host 127.0.0.1",
+    "build": "npm run build --workspace functions && npm run build --workspace web",
+    "emulators": "firebase emulators:start --project demo-running-plan --only auth,firestore,storage,functions",
+    "web": "npm run dev --workspace web -- --host 127.0.0.1"
+  }
+}
