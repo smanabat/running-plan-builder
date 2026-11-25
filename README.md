@@ -6,7 +6,7 @@ A portfolio project exploring how a running plan can use activity history and ru
 
 ## Run locally
 
-Requirements: Node.js 20 or later, Java 21 or later (for Firebase emulators), and Firebase CLI.
+Requirements: Node.js 22 or later, Java 21 or later (for Firebase emulators), and Firebase CLI.
 
 ```sh
 npm install
