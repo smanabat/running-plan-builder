@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, type User } from 'firebase/auth'
+import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, type User } from 'firebase/auth'
 import { collection, deleteDoc, doc, onSnapshot, orderBy, query, serverTimestamp, setDoc } from 'firebase/firestore'
 import { deleteObject, ref, uploadBytes } from 'firebase/storage'
 import { httpsCallable } from 'firebase/functions'
@@ -23,6 +23,8 @@ type ImportRecord = { id: string; uploadedAt?: { toDate: () => Date }; runCount:
 type GenerateResult = { planId: string }
 
 const generatePlan = httpsCallable<Record<string, unknown>, GenerateResult>(functions, 'generateTrainingPlan')
+const googleProvider = new GoogleAuthProvider()
+googleProvider.setCustomParameters({ prompt: 'select_account' })
 const dayOptions = [
   { id: 'tue', label: 'Tue' }, { id: 'thu', label: 'Thu' }, { id: 'sat', label: 'Sat' }, { id: 'sun', label: 'Sun' }, { id: 'mon', label: 'Mon' },
 ]
@@ -47,19 +49,42 @@ function AuthPanel() {
     } catch (err) { setError(err instanceof Error ? err.message : 'Could not sign in.') }
     finally { setBusy(false) }
   }
+  async function signInWithGoogle() {
+    setError(''); setBusy(true)
+    try {
+      await signInWithPopup(auth, googleProvider)
+    } catch (err) {
+      const code = typeof err === 'object' && err !== null && 'code' in err ? String(err.code) : ''
+      setError(code === 'auth/operation-not-allowed'
+        ? 'Google sign-in is not enabled for this Firebase project yet.'
+        : code === 'auth/unauthorized-domain'
+          ? 'This site is not authorized for Google sign-in. Add its domain in Firebase Authentication settings.'
+          : code === 'auth/account-exists-with-different-credential'
+            ? 'An account with this email uses a different sign-in method. Sign in with that method first.'
+            : code === 'auth/popup-blocked'
+              ? 'Your browser blocked the sign-in window. Allow pop-ups for this site and try again.'
+              : code === 'auth/popup-closed-by-user'
+                ? 'Google sign-in was cancelled.'
+                : err instanceof Error ? err.message : 'Could not sign in with Google.')
+    } finally { setBusy(false) }
+  }
   return <main className="auth-layout"><section className="auth-card">
     <div className="eyebrow">STRIDEWISE · EARLY ACCESS</div><h1>Training that fits your real life.</h1>
     <p className="muted">Build a marathon plan around your recent running, your goal and the days you can train. Every recommendation comes with its reasoning.</p>
+    <button className="google-button" type="button" disabled={busy} onClick={() => void signInWithGoogle()}>
+      <span className="google-mark" aria-hidden="true">G</span>Continue with Google
+    </button>
+    <div className="auth-divider"><span>or use email</span></div>
     <form onSubmit={submit} className="stack">
       <label>Email<input autoComplete="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} /></label>
       <label>Password<input autoComplete={mode === 'create' ? 'new-password' : 'current-password'} type="password" minLength={8} required value={password} onChange={(e) => setPassword(e.target.value)} /></label>
       {error && <p role="alert" className="error">{error}</p>}
-      <button className="primary" disabled={busy}>{busy ? 'Working…' : mode === 'create' ? 'Create local account' : 'Sign in'}</button>
+      <button className="primary" disabled={busy}>{busy ? 'Working…' : mode === 'create' ? 'Create account' : 'Sign in'}</button>
     </form>
-    <button className="text-button" onClick={() => { setMode(mode === 'create' ? 'sign-in' : 'create'); setError('') }}>
+    <button className="text-button" type="button" disabled={busy} onClick={() => { setMode(mode === 'create' ? 'sign-in' : 'create'); setError('') }}>
       {mode === 'create' ? 'Already have an account? Sign in' : 'New here? Create an account'}
     </button>
-    <p className="small muted">Local prototype: accounts are stored in the Firebase Auth emulator on this computer.</p>
+    <p className="small muted">Sign-in is managed by Firebase Authentication. Local development uses the Auth emulator.</p>
   </section></main>
 }
 
